@@ -10,7 +10,7 @@ pipeline {
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
             steps {
                 script {
-                    build job: env.PROD_VER, propagate: true, wait: true
+                    build job: ${PROD_JOB}, propagate: true, wait: true
                     currentBuild.rawBuild.project.setDisplayName("pipeline-demo-project")
                 }
             }
@@ -24,7 +24,7 @@ pipeline {
             }
             steps {
                 sh "echo building project"
-                build job: env.PROJ_JOB, propagate: true, wait: true
+                build job: ${PROJ_JOB}, propagate: true, wait: true
             }
         }
         stage("deploy") {               //  Utolsó lépésként deployolunk
