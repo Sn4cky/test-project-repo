@@ -1,5 +1,10 @@
 pipeline {
     agent any
+	
+	parameters {
+		string(name: "JOB_NAME", defaultValue: "", description: "Name of the product job")
+		choice(name: "ENVIRONMENT", choices: ["dev", "production", "hotfix"], description: "Build environment")
+	}
     
     environment {
         PROD_JOB = "build-product"
@@ -10,8 +15,8 @@ pipeline {
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
             steps {
                 script {
-                    build job: "${PROD_JOB}", propagate: true, wait: true
-                    currentBuild.rawBuild.project.setDisplayName("pipeline-demo-project")
+                    build job: "${params.JOB_NAME}", propagate: true, wait: true
+					currentBuild.rawBuild.project.setDisplayName("${params.JOB_NAME}")
                 }
             }
         }
