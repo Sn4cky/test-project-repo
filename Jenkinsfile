@@ -28,6 +28,7 @@ pipeline {
 					}
 					if (job_snapshot_split.size() == 2 && job_snapshot_split[1] == "SNAPSHOT") {
 						env.IS_SNAPSHOT = "true"
+						echo "snapshot build"
 					}
 				}
 			}
