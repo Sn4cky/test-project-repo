@@ -8,7 +8,7 @@ pipeline {
 	environment {
 		PROD_VERSION = "4.13.5-SNAPSHOT"
 		PROJ_VERSION = "4.13.aquashop.1.1"
-		JOB_VERSION = "${env.PROD_VERSION.split(".")[0]}.${env.PROD_VERSION.split(".")[1]}"
+		JOB_VERSION = getJobVersion()
 		IS_SNAPSHOT = "false"
 	}
     
@@ -51,7 +51,7 @@ pipeline {
 
 def getJobVersion() {
 	def job_version_split = env.PROD_VERSION.split(".")
-	return "$job_version_split[0].$job_version_split[1]"
+	return "${job_version_split[0]}.${job_version_split[1]}"
 }
 
 def checkSnapshot() {
