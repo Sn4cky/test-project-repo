@@ -23,6 +23,9 @@ pipeline {
 					env.JOB_VERSION = "$job_version_split[0].$job_version_split[1]"
 					
 					def job_snapshot_split = env.PROD_VERSION.split("-")
+					for (i in job_snapshot_split) {
+						echo i
+					}
 					if (job_snapshot_split.size() == 2 && job_snapshot_split[1] == "SNAPSHOT") {
 						env.IS_SNAPSHOT = "true"
 					}
