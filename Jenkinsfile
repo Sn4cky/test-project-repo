@@ -9,7 +9,7 @@ pipeline {
 		PROD_VERSION = "4.13.5-SNAPSHOT"
 		PROJ_VERSION = "4.13.aquashop.1.1"
 		MAIN_VER = "4.13"
-		IS_SNAPSHOT = "false"
+		IS_SNAPSHOT = "true"
 	}
     
     stages {
