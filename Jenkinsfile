@@ -8,19 +8,19 @@ pipeline {
 	environment {
 		PROD_VERSION = "4.13.5-SNAPSHOT"
 		PROJ_VERSION = "4.13.aquashop.1.1"
-		MAIN_VER = getMainVersion()
+		MAIN_VER = "4.13"
 		IS_SNAPSHOT = "false"
 	}
     
     stages {
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
 			when {
-				expression { env.getProperty(IS_SNAPSHOT) == "true" }
+				expression { env.IS_SNAPSHOT == "true" }
 			}
 			steps {
                 script {
                     build job: "build-product", propagate: true, wait: true
-					currentBuild.rawBuild.project.setDisplayName("aquashop-${params.ENVIRONMENT}: ${env.getProperty(PROJ_VERSION)} (${env.getProperty(PROD_VERSION)}}")
+					currentBuild.rawBuild.project.setDisplayName("aquashop-${params.ENVIRONMENT}: ${env.PROJ_VERSION} (${env.PROD_VERSION}}")
 				}
             }
         }
@@ -32,7 +32,7 @@ pipeline {
                 }
             }
             steps {
-				sh "echo building project ${env.getProperty(MAIN_VER)}"
+				sh "echo building project ${env.MAIN_VER}"
                 build job: "build-project", propagate: true, wait: true
             }
         }
@@ -47,13 +47,4 @@ pipeline {
             }
         }
     }
-}
-
-def getMainVersion() {
-	def job_version_split = env.getProperty(PROD_VERSION).split(".")
-	return "4.13"
-}
-
-def checkSnapshot() {
-	return "false"
 }
