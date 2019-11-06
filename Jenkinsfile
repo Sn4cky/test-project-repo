@@ -9,7 +9,7 @@ pipeline {
 		PROD_VERSION = "4.13.5-SNAPSHOT"
 		PROJ_VERSION = "4.13.aquashop.1.1"
 		JOB_VERSION = ""
-		IS_SNAPSHOT = "false"
+		IS_SNAPSHOT = checkSnapshot()
 	}
     
     stages {
@@ -67,4 +67,13 @@ pipeline {
             }
         }
     }
+}
+
+def checkSnapshot() {
+	def job_snapshot_split = env.PROD_VERSION.split("-")
+	if (job_snapshot_split.size() == 2 && job_snapshot_split[1] == "SNAPSHOT") {
+		return "true"
+	} else {
+		return "false"
+	}
 }
