@@ -57,6 +57,7 @@ def getJobVersion() {
 def checkSnapshot() {
 	def job_snapshot_split = env.PROD_VERSION.split("-")
 	if (job_snapshot_split.size() == 2 && job_snapshot_split[1] == "SNAPSHOT") {
+		echo "is snapshot"
 		return "true"
 	} else {
 		return "false"
