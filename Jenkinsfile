@@ -6,8 +6,8 @@ pipeline {
 	}
 	
 	environment {
-		PROD_VERSION = ""
-		PROJ_VERSION = ""
+		PROD_VERSION = "4.13.5-SNAPSHOT"
+		PROJ_VERSION = "4.13.aquashop.1.1"
 		JOB_VERSION = ""
 		IS_SNAPSHOT = "false"
 	}
