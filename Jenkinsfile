@@ -20,7 +20,7 @@ pipeline {
 					env.PROJ_VERSION = "4.13.aquashop.1.1"
 					
 					def job_version_split = env.PROD_VERSION.split(".")
-					env.JOB_VERSION = "$job_version_split[0].$job_version.split[1]"
+					env.JOB_VERSION = "$job_version_split[0].$job_version_split[1]"
 					
 					def job_snapshot_split = env.PROD_VERSION.split("-")
 					if (job_snapshot_split.size() == 2 && job_snapshot_split[1] == "SNAPSHOT") {
