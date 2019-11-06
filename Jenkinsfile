@@ -51,15 +51,9 @@ pipeline {
 
 def getJobVersion() {
 	def job_version_split = env.PROD_VERSION.split(".")
-	return "${job_version_split[0]}.${job_version_split[1]}"
+	return "4.13"
 }
 
 def checkSnapshot() {
-	def job_snapshot_split = env.PROD_VERSION.split("-")
-	if (job_snapshot_split.size() == 2 && job_snapshot_split[1] == "SNAPSHOT") {
-		echo "is snapshot"
-		return "true"
-	} else {
-		return "false"
-	}
+	return "false"
 }
