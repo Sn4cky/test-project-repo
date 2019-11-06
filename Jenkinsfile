@@ -8,7 +8,7 @@ pipeline {
 	environment {
 		PROD_VERSION = "4.13.5-SNAPSHOT"
 		PROJ_VERSION = "4.13.aquashop.1.1"
-		JOB_VERSION = getJobVersion()
+		MAIN_VER = getMainVersion()
 		IS_SNAPSHOT = "false"
 	}
     
@@ -20,7 +20,7 @@ pipeline {
 			steps {
                 script {
                     build job: "build-product", propagate: true, wait: true
-					currentBuild.rawBuild.project.setDisplayName("aquashop-${params.DEPLOY_ENV}: ${env.PROJ_VERSION} (${env.PROD_VERSION}}")
+					currentBuild.rawBuild.project.setDisplayName("aquashop-${params.ENVIRONMENT}: ${env.PROJ_VERSION} (${env.PROD_VERSION}}")
 				}
             }
         }
@@ -32,7 +32,7 @@ pipeline {
                 }
             }
             steps {
-                sh "echo building project"
+				sh "echo building project ${env.MAIN_VER}"
                 build job: "build-project", propagate: true, wait: true
             }
         }
@@ -49,7 +49,7 @@ pipeline {
     }
 }
 
-def getJobVersion() {
+def getMainVersion() {
 	def job_version_split = env.PROD_VERSION.split(".")
 	return "4.13"
 }
