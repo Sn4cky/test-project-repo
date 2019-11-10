@@ -13,11 +13,12 @@ pipeline {
     stages {
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
 			when {
-				expression { isSnapshot() == "true" }
+				expression { "true" == "true" }
 			}
 			steps {
                 script {
-					build job: "smart-erp-${env.PROD_VERSION.split(".")[0]}.${env.PROD_VERSION.split(".")[1]}", propagate: true, wait: true
+					sh "echo ${env.PROD_VERSION.split(".")"
+					build job: "build-product", propagate: true, wait: true
 					currentBuild.rawBuild.project.setDisplayName("aquashop-${params.ENVIRONMENT}: ${env.PROJ_VERSION} (${env.PROD_VERSION}}")
 				}
             }
@@ -30,7 +31,7 @@ pipeline {
                 }
             }
             steps {
-				sh "echo building project ${getMainVersion()}"
+				sh "echo ${env.PROD_VERSION.split("-")"
                 build job: "build-project", propagate: true, wait: true
             }
         }
@@ -45,18 +46,4 @@ pipeline {
             }
         }
     }
-}
-
-String getMainVersion() {
-	def prodVerSplit = env.PROD_VERSION.split(".")
-	return "${prodVerSplit[0]}.${prodVerSplit[1]}"
-}
-
-String isSnapshot() {
-	def prodVerSplit = env.PROD_VERSION.split("-")
-	if (prodVerSplit.size() == 2 && prodVerSplit[1] == "SNAPSHOT") {
-		return "true"
-	} else {
-		return "false"
-	}
 }
