@@ -17,7 +17,7 @@ pipeline {
 			}
 			steps {
                 script {
-					sh "echo ${env.PROD_VERSION.split(".")"
+					sh "echo ${env.PROD_VERSION.split(".")}"
 					build job: "build-product", propagate: true, wait: true
 					currentBuild.rawBuild.project.setDisplayName("aquashop-${params.ENVIRONMENT}: ${env.PROJ_VERSION} (${env.PROD_VERSION}}")
 				}
@@ -31,7 +31,7 @@ pipeline {
                 }
             }
             steps {
-				sh "echo ${env.PROD_VERSION.split("-")"
+				sh "echo ${env.PROD_VERSION.split("-")}"
                 build job: "build-project", propagate: true, wait: true
             }
         }
