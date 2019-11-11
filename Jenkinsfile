@@ -28,7 +28,8 @@ pipeline {
             when {
                 anyOf {
                     changeset "**/Jenkinsfile"
-                    changeset "/src/main/**"
+					changeset "**/gradle.properties"
+                    changeset "**/src/main/**"
                 }
             }
             steps {
