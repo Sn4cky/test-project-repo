@@ -6,7 +6,7 @@ pipeline {
 	}
 	
 	environment {
-		GRADLE_PROPERTIES = readProperties file: 'gradle.properties'
+		GRADLE_PROPERTIES = readProperties file: 'build.gradle'
 		PROD_VERSION = "${env.GRADLE_PROPERTIES['smartErpVersion']}"
 		PROJ_VERSION = "${env.GRADLE_PROPERTIES['projectVersion']}"
 	}
