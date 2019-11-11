@@ -50,7 +50,7 @@ pipeline {
 }
 
 String[] getProdVersion() {
-	def properties = readProperties file: 'build.gradle'
+	def properties = readProperties file: 'gradle.properties'
 	return properties
 }
 
