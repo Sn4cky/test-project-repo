@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
 			when {
-				expression { isSnapshot() == "true" }
+				expression { "true" == "true" }
 			}
 			steps {
                 script {
@@ -51,10 +51,6 @@ pipeline {
 String[] getProperties() {
 	def properties = readProperties file: 'gradle.properties'
 	return properties
-}
-
-String getProjVersion() {
-
 }
 
 String getMainVersion() {
