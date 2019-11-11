@@ -20,7 +20,7 @@ pipeline {
                 script {
 					sh "echo ${env.GRADLE_PROPERTIES} ${env.PROD_VERSION} ${env.PROJ_VERSION}"
 					build job: "build-product", propagate: true, wait: true
-					currentBuild.rawBuild.project.setDisplayName("aquashop-${params.ENVIRONMENT}: ${env.PROJ_VERSION} (${env.PROD_VERSION}}")
+					currentBuild.rawBuild.project.setDisplayName("aquashop-${params.ENVIRONMENT}: ${env.PROJ_VERSION} (${env.PROD_VERSION})")
 				}
             }
         }
