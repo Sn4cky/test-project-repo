@@ -1,5 +1,8 @@
 pipeline {
     agent any
+	
+	parameters {}
+	
 	environment {
 		GRADLE_PROPERTIES = readProperties file: 'gradle.properties'
 		PROD_VERSION = "${env.GRADLE_PROPERTIES['smartErpVersion']}"
