@@ -6,8 +6,9 @@ pipeline {
 	}
 	
 	environment {
-		PROD_VERSION = "4.13.5-SNAPSHOT"
-		PROJ_VERSION = "4.13.aquashop.1.1"
+		GRADLE_PROPERTIES = getProperties()
+		PROD_VERSION = env.GRADLE_PROPERTIES['smartErpVersion']
+		PROJ_VERSION = env.GRADLE_PROPERTEIS['projVersion']
 	}
     
     stages {
@@ -17,9 +18,7 @@ pipeline {
 			}
 			steps {
                 script {
-					def props = getProdVersion()
-					def mainVersion = getMainVersion()
-					sh "echo ${mainVersion} ${props}"
+					sh "echo ${env.PROD_VERSION} ${env.PROJ_VERSION}"
 					build job: "build-product", propagate: true, wait: true
 					currentBuild.rawBuild.project.setDisplayName("aquashop-${params.ENVIRONMENT}: ${env.PROJ_VERSION} (${env.PROD_VERSION}}")
 				}
@@ -49,9 +48,13 @@ pipeline {
     }
 }
 
-String[] getProdVersion() {
+String[] getProperties() {
 	def properties = readProperties file: 'gradle.properties'
 	return properties
+}
+
+String getProjVersion() {
+
 }
 
 String getMainVersion() {
