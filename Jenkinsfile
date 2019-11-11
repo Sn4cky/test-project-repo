@@ -8,7 +8,7 @@ pipeline {
 	environment {
 		GRADLE_PROPERTIES = getProperties()
 		PROD_VERSION = "${env.GRADLE_PROPERTIES['smartErpVersion']}"
-		PROJ_VERSION = "${env.GRADLE_PROPERTEIS['projVersion']}"
+		PROJ_VERSION = "${env.GRADLE_PROPERTEIS['projectVersion']}"
 	}
     
     stages {
