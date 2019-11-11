@@ -17,6 +17,9 @@ pipeline {
 			}
 			steps {
                 script {
+					def props = getProdVersion()
+					def mainVersion = getMainVersion()
+					sh "echo ${mainVersion} ${props}"
 					build job: "build-product", propagate: true, wait: true
 					currentBuild.rawBuild.project.setDisplayName("aquashop-${params.ENVIRONMENT}: ${env.PROJ_VERSION} (${env.PROD_VERSION}}")
 				}
@@ -46,9 +49,14 @@ pipeline {
     }
 }
 
+String[] getProdVersion() {
+	def properties = readProperties file: '**/build.gradle'
+	return properties
+}
+
 String getMainVersion() {
 	def prodVerSplit = env.PROD_VERSION.split("\\.")
-	return "${prodVerSplit[0]}\\.${prodVerSplit[1]}"
+	return "${prodVerSplit[0]}.${prodVerSplit[1]}"
 }
 
 String isSnapshot() {
