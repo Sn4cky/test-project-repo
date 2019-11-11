@@ -6,7 +6,7 @@ pipeline {
 	}
 	
 	environment {
-		GRADLE_PROPERTIES = getProperties()
+		GRADLE_PROPERTIES = readProperties file: 'gradle.properties'
 		PROD_VERSION = "${env.GRADLE_PROPERTIES['smartErpVersion']}"
 		PROJ_VERSION = "${env.GRADLE_PROPERTIES['projectVersion']}"
 	}
@@ -46,11 +46,6 @@ pipeline {
             }
         }
     }
-}
-
-String[] getProperties() {
-	def properties = readProperties file: 'gradle.properties'
-	return properties
 }
 
 String getMainVersion() {
