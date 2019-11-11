@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
 			when {
-				expression { "true" == "true" }
+				expression { isSnapshot() == "true" }
 			}
 			steps {
                 script {
