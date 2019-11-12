@@ -2,12 +2,6 @@ pipeline {
     agent none
     
     stages {
-		stage("pre-build") {
-			agent any
-			steps {
-				
-			}
-		}
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
 			agent none
 			when {
