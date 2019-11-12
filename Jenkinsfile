@@ -17,7 +17,7 @@ pipeline {
 			}
 			
 			when {
-				expression { isSnapshot() == "true" }
+				expression { PROD_VERSION.split("-").size() == 2 && PROD_VERSION.split("-")[1] == "SNAPSHOT" }
 			}
 			
 			steps {
@@ -62,13 +62,4 @@ pipeline {
             }
         }
     }
-}
-
-String isSnapshot(String prodVersion) {
-	def prodVerSplit = prodVersion.split("-")
-	if (prodVerSplit.size() == 2 && prodVerSplit[1] == "SNAPSHOT") {
-		return "true"
-	} else {
-		return "false"
-	}
 }
