@@ -15,7 +15,7 @@ pipeline {
 				PROJ_VERSION = "${env.GRADLE_PROPERTIES['projectVersion']}"
 			}
 			when {
-				expression { readProperties(file: 'gradle.properties')['smartErpVersion'].split("-").size() == 2 }
+				expression { "true" == "true" }
 			}
 			steps {
                 script {
