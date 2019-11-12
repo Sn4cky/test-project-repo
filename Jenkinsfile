@@ -9,17 +9,14 @@ pipeline {
     stages {
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
 			agent none
-			
 			environment {
 				GRADLE_PROPERTIES = readProperties file: 'gradle.properties'
 				PROD_VERSION = "${env.GRADLE_PROPERTIES['smartErpVersion']}"
 				PROJ_VERSION = "${env.GRADLE_PROPERTIES['projectVersion']}"
 			}
-			
 			when {
-				expression { PROD_VERSION.split("-").size() == 2 && PROD_VERSION.split("-")[1] == "SNAPSHOT" }
+				expression { readProperties('gradle.properties')['smartErpVersion'].split("-").size() == 2 }
 			}
-			
 			steps {
                 script {
 					build job: "build-product", propagate: true, wait: true
@@ -28,13 +25,11 @@ pipeline {
         }
         stage("build-project") {        //  Ha a projektben sincs változás, akkor elég csak deployolni, így nem kell külön deploy job sem
 			agent any
-			
 			environment {
 				GRADLE_PROPERTIES = readProperties file: 'gradle.properties'
 				PROD_VERSION = "${env.GRADLE_PROPERTIES['smartErpVersion']}"
 				PROJ_VERSION = "${env.GRADLE_PROPERTIES['projectVersion']}"
 			}
-			
 			when {
                 anyOf {
                     changeset "**/Jenkinsfile"
@@ -42,7 +37,6 @@ pipeline {
                     changeset "**/src/main/**"
                 }
             }
-			
             steps {
 				script {
 					build job: "build-project", propagate: true, wait: true
