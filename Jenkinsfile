@@ -24,7 +24,7 @@ pipeline {
             }
             steps {
 				script {
-					build job: "build-project", propagate: true, wait: true
+					echo "building project"
 				}
             }
         }
