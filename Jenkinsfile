@@ -64,8 +64,8 @@ pipeline {
     }
 }
 
-String isSnapshot() {
-	def prodVerSplit = env.PROD_VERSION.split("-")
+String isSnapshot(String prodVersion) {
+	def prodVerSplit = prodVersion.split("-")
 	if (prodVerSplit.size() == 2 && prodVerSplit[1] == "SNAPSHOT") {
 		return "true"
 	} else {
