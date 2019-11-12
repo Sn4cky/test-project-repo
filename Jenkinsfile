@@ -28,6 +28,13 @@ pipeline {
         }
         stage("build-project") {        //  Ha a projektben sincs változás, akkor elég csak deployolni, így nem kell külön deploy job sem
 			agent any
+			
+			environment {
+				GRADLE_PROPERTIES = readProperties file: 'gradle.properties'
+				PROD_VERSION = "${env.GRADLE_PROPERTIES['smartErpVersion']}"
+				PROJ_VERSION = "${env.GRADLE_PROPERTIES['projectVersion']}"
+			}
+			
 			when {
                 anyOf {
                     changeset "**/Jenkinsfile"
@@ -35,9 +42,12 @@ pipeline {
                     changeset "**/src/main/**"
                 }
             }
+			
             steps {
-                build job: "build-project", propagate: true, wait: true
-				currentBuild.rawBuild.project.setDisplayName("aquashop-dev: ${env.PROJ_VERSION} (${env.PROD_VERSION})")
+				script {
+					build job: "build-project", propagate: true, wait: true
+					currentBuild.rawBuild.project.setDisplayName("aquashop-dev: ${env.PROJ_VERSION} (${env.PROD_VERSION})")
+				}
             }
         }
         stage("deploy") {               //  Utolsó lépésként deployolunk
