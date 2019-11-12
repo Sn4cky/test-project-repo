@@ -1,26 +1,26 @@
 pipeline {
-    agent none
+    agent any
 	environment {
-		GRADLE_PROPERTIES = readProperties file: 'gradle.properties'
-		PROD_VERSION = "${env.GRADLE_PROPERTIES['smartErpVersion']}"
-		PROJ_VERSION = "${env.GRADLE_PROPERTIES['projectVersion']}"
+		//GRADLE_PROPERTIES = readProperties file: 'gradle.properties'
+		//PROD_VERSION = "${env.GRADLE_PROPERTIES['smartErpVersion']}"
+		//PROJ_VERSION = "${env.GRADLE_PROPERTIES['projectVersion']}"
+		PROD_VERSION = "4.13.5-SNAPSHOT"
+		PROJ_VERSION = "4.13.aquashop.1.2"
 	}
     
     stages {
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
 			when {
-				expression { isSnapshot() == "true" }
+				expression { "true" == "true" }
 			}
 			steps {
                 script {
-					sh "echo ${env.GRADLE_PROPERTIES} ${env.PROD_VERSION} ${env.PROJ_VERSION}"
 					build job: "build-product", propagate: true, wait: true
-					currentBuild.rawBuild.project.setDisplayName("aquashop-${params.ENVIRONMENT}: ${env.PROJ_VERSION} (${env.PROD_VERSION})")
+					currentBuild.rawBuild.project.setDisplayName("aquashop-dev: ${env.PROJ_VERSION} (${env.PROD_VERSION})")
 				}
             }
         }
         stage("build-project") {        //  Ha a projektben sincs változás, akkor elég csak deployolni, így nem kell külön deploy job sem
-			agent any
 			when {
                 anyOf {
                     changeset "**/Jenkinsfile"
@@ -45,16 +45,16 @@ pipeline {
     }
 }
 
-String getMainVersion() {
-	def prodVerSplit = env.PROD_VERSION.split("\\.")
-	return "${prodVerSplit[0]}.${prodVerSplit[1]}"
-}
+//String getMainVersion() {
+	//def prodVerSplit = env.PROD_VERSION.split("\\.")
+	//return "${prodVerSplit[0]}.${prodVerSplit[1]}"
+//}
 
-String isSnapshot() {
-	def prodVerSplit = env.PROD_VERSION.split("-")
-	if (prodVerSplit.size() == 2 && prodVerSplit[1] == "SNAPSHOT") {
-		return "true"
-	} else {
-		return "false"
-	}
-}
+//String isSnapshot() {
+	//def prodVerSplit = env.PROD_VERSION.split("-")
+	//if (prodVerSplit.size() == 2 && prodVerSplit[1] == "SNAPSHOT") {
+		//return "true"
+	//} else {
+		//return "false"
+	//}
+//}
