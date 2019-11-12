@@ -20,9 +20,7 @@ pipeline {
             }
         }
         stage("build-project") {        //  Ha a projektben sincs változás, akkor elég csak deployolni, így nem kell külön deploy job sem
-			agent {
-				label 'master'
-			}
+			agent any
 			when {
                 anyOf {
                     changeset "**/Jenkinsfile"
