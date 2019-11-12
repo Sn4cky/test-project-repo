@@ -2,10 +2,16 @@ pipeline {
     agent none
     
     stages {
+		stage("pre-build") {
+			agent any
+			steps {
+				
+			}
+		}
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
 			agent none
 			when {
-				expression { "true" == "true" }
+				expression { return readFile('gradle.properties').contains('-SNAPSHOT') }
 			}
 			steps {
                 script {
