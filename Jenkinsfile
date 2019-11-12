@@ -1,23 +1,33 @@
 pipeline {
-    agent any
-	environment {
+    agent none
+	//environment {
 		//GRADLE_PROPERTIES = readProperties file: 'gradle.properties'
 		//PROD_VERSION = "${env.GRADLE_PROPERTIES['smartErpVersion']}"
 		//PROJ_VERSION = "${env.GRADLE_PROPERTIES['projectVersion']}"
-		PROD_VERSION = "4.13.5-SNAPSHOT"
-		PROJ_VERSION = "4.13.aquashop.1.2"
-	}
+	//}
     
     stages {
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
+			agent none
+			
+			environment {
+				GRADLE_PROPERTIES = readProperties file: 'gradle.properties'
+				PROD_VERSION = "${env.GRADLE_PROPERTIES['smartErpVersion']}"
+				PROJ_VERSION = "${env.GRADLE_PROPERTIES['projectVersion']}"
+			}
+			
+			when {
+				expression { isSnapshot() == "true" }
+			}
+			
 			steps {
                 script {
 					build job: "build-product", propagate: true, wait: true
-					currentBuild.rawBuild.project.setDisplayName("aquashop-dev: ${env.PROJ_VERSION} (${env.PROD_VERSION})")
 				}
             }
         }
         stage("build-project") {        //  Ha a projektben sincs változás, akkor elég csak deployolni, így nem kell külön deploy job sem
+			agent any
 			when {
                 anyOf {
                     changeset "**/Jenkinsfile"
@@ -27,10 +37,12 @@ pipeline {
             }
             steps {
                 build job: "build-project", propagate: true, wait: true
+				currentBuild.rawBuild.project.setDisplayName("aquashop-dev: ${env.PROJ_VERSION} (${env.PROD_VERSION})")
             }
         }
         stage("deploy") {               //  Utolsó lépésként deployolunk
-            steps {
+            agent any
+			steps {
                 script {
                     sh (
                         script: "echo deploying",
@@ -42,16 +54,11 @@ pipeline {
     }
 }
 
-//String getMainVersion() {
-	//def prodVerSplit = env.PROD_VERSION.split("\\.")
-	//return "${prodVerSplit[0]}.${prodVerSplit[1]}"
-//}
-
-//String isSnapshot() {
-	//def prodVerSplit = env.PROD_VERSION.split("-")
-	//if (prodVerSplit.size() == 2 && prodVerSplit[1] == "SNAPSHOT") {
-		//return "true"
-	//} else {
-		//return "false"
-	//}
-//}
+String isSnapshot() {
+	def prodVerSplit = env.PROD_VERSION.split("-")
+	if (prodVerSplit.size() == 2 && prodVerSplit[1] == "SNAPSHOT") {
+		return "true"
+	} else {
+		return "false"
+	}
+}
