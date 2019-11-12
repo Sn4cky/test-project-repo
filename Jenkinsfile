@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
 	environment {
 		GRADLE_PROPERTIES = readProperties file: 'gradle.properties'
 		PROD_VERSION = "${env.GRADLE_PROPERTIES['smartErpVersion']}"
@@ -20,7 +20,10 @@ pipeline {
             }
         }
         stage("build-project") {        //  Ha a projektben sincs változás, akkor elég csak deployolni, így nem kell külön deploy job sem
-            when {
+			agent {
+				label 'master'
+			}
+			when {
                 anyOf {
                     changeset "**/Jenkinsfile"
 					changeset "**/gradle.properties"
