@@ -10,9 +10,6 @@ pipeline {
     
     stages {
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
-			when {
-				expression { "true" == "true" }
-			}
 			steps {
                 script {
 					build job: "build-product", propagate: true, wait: true
