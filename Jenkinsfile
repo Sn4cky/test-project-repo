@@ -6,13 +6,14 @@ pipeline {
 			agent none
 			steps {
                 script {
-					def gradleProperties = readProperties file: 'gradle.properties'
-					def snapshotSplit = gradleProperties['smartErpVersion'].split('-')
+					node {
+						def gradleProperties = readProperties file: 'gradle.properties'
+						def snapshotSplit = gradleProperties['smartErpVersion'].split('-')
+					}
 					
 					if (snapshotSplit.size() == 2 && snapshotSplit[1] == 'SNAPSHOT') {
 						build job: "build-product", propagate: true, wait: true
 					} else {
-						Utils.markStageSkippedForConditional("build-product")
 					}
 				}
             }
