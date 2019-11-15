@@ -1,4 +1,21 @@
-def GRADLE_PROPERTIES = readProperties file: 'gradle.properties'
+def MAIN_VERSION = null
+def PROD_VERSION = null
+def PROJ_VERSION = null
+def IS_SNAPSHOT = "false"
+
+node {
+	def gradleProperties = readProperties file: 'gradle.properties'
+	def mainVerSplit = gradleProperties['smartErpVersion'].split("\\.")
+	def snapshotSplit = gradleProperties['smartErpVersion'].split("-")
+	
+	if (snapshotSplit.size() == 2 && snapshotSplit[1] == "SNAPSHOT") {
+		IS_SNAPSHOT = "true"
+	}
+	
+	MAIN_VERSION = "${mainVerSplit[0]}.${mainVerSplit[1]}"
+	PROD_VERSION = "${gradleProperties['smartErpVersion']}"
+	PROJ_VERSION = "${gradleProperties['projectVersion']}"
+}
 
 pipeline {
     agent none
@@ -7,7 +24,7 @@ pipeline {
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
 			agent none
 			when {
-				expression { GRADLE_PROPERTIES['smartErpVersion'].split("-").size() == 2 }
+				expression { IS_SNAPSHOT == "true" }
 			}
 			steps {
                 script {
@@ -26,10 +43,8 @@ pipeline {
             }
             steps {
 				script {
-					def gradleProperties = readProperties file: 'gradle.properties'
-					def mainVersionSplit = gradleProperties['smartErpVersion'].split('\\.')
-					echo "building project"
-					currentBuild.rawBuild.project.setDisplayName("aquashop-dev: ${mainVersionSplit[0]}.${mainVersionSplit[1]} (${gradleProperties['projectVersion']})")
+					echo "building project ${MAIN_VERSION}"
+					currentBuild.rawBuild.project.setDisplayName("aquashop-dev: ${PROJ_VERSION} (${PROD_VERSION})")
 				}
             }
         }
