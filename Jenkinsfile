@@ -1,7 +1,7 @@
 def MAIN_VERSION = null
 def PROD_VERSION = null
 def PROJ_VERSION = null
-def IS_SNAPSHOT = "false"
+def IS_SNAPSHOT = null
 
 node {
 	def gradleProperties = readProperties file: 'gradle.properties'
@@ -10,6 +10,8 @@ node {
 	
 	if (snapshotSplit.size() == 2 && snapshotSplit[1] == "SNAPSHOT") {
 		IS_SNAPSHOT = "true"
+	} else {
+		IS_SNAPSHOT = "false"
 	}
 	
 	MAIN_VERSION = "${mainVerSplit[0]}.${mainVerSplit[1]}"
