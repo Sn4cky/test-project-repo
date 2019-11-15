@@ -12,7 +12,7 @@ pipeline {
 					if (snapshotSplit.size() == 2 && snapshotSplit[1] == 'SNAPSHOT') {
 						build job: "build-product", propagate: true, wait: true
 					} else {
-						echo "product version is not snapshot, skipping build"
+						Utils.markStageSkippedForConditional("build-product")
 					}
 				}
             }
