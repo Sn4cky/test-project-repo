@@ -1,20 +1,17 @@
+def GRADLE_PROPERTIES = readProperties file: 'gradle.properties'
+
 pipeline {
     agent none
     
     stages {
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
 			agent none
+			when {
+				expression { GRADLE_PROPERTIES['smartErpVersion'].split("-").size() == 2 }
+			}
 			steps {
                 script {
-					node {
-						def gradleProperties = readProperties file: 'gradle.properties'
-						def snapshotSplit = gradleProperties['smartErpVersion'].split('-')
-					}
-					
-					if (snapshotSplit.size() == 2 && snapshotSplit[1] == 'SNAPSHOT') {
-						build job: "build-product", propagate: true, wait: true
-					} else {
-					}
+					build job: 'build-product', propagate: true, wait: true
 				}
             }
         }
