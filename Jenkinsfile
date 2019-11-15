@@ -4,12 +4,16 @@ pipeline {
     stages {
         stage("build-product") {        //  Termék build, saját pipeline job-ot hívunk, hogy megnézzük van-e szükség build-re
 			agent none
-			when {
-				expression { return readFile('gradle.properties').contains('-SNAPSHOT') }
-			}
 			steps {
                 script {
-					build job: "build-product", propagate: true, wait: true
+					def gradleProperties = readProperties file: 'gradle.properties'
+					def snapshotSplit = gradleProperties['smartErpVersion'].split('-')
+					
+					if (snapshotSplit.size() == 2 && snapshotSplit[1] == 'SNAPSHOT') {
+						build job: "build-product", propagate: true, wait: true
+					} else {
+						echo "product version is not snapshot, skipping build"
+					}
 				}
             }
         }
@@ -24,7 +28,10 @@ pipeline {
             }
             steps {
 				script {
+					def gradleProperties = readProperties file: 'gradle.properties'
+					def mainVersionSplit = gradleProperties['smartErpVersion'].split('\\.')
 					echo "building project"
+					currentBuild.rawBuild.project.setDisplayName("aquashop-dev: ${mainVersionSplit[0]}.${mainVersionSplit[1]} (${gradleProperties['projectVersion']})")
 				}
             }
         }
@@ -32,10 +39,7 @@ pipeline {
             agent any
 			steps {
                 script {
-                    sh (
-                        script: "echo deploying",
-                        returnStdout: true
-                    ).trim()
+					echo "deploying"
                 }
             }
         }
